@@ -1,77 +1,74 @@
-import React from "react";
-import { useState } from "react";
-import API from "../api";
+import React, { useState } from "react";
+import api from "../api"
 
 const Users = () => {
-    const [users,setUsers] = useState(API.users.fetchAll());
+    const [users, setUsers] = useState(api.users.fetchAll());
 
     const handleDelete = (userId) => {
-        setUsers((prevState) => prevState.filter(user => user._id !== userId ));
+        setUsers(users.filter((user) => user._id !== userId));
+    };
 
-    }
+    const renderPhrase = (number) => {
+        const lastOne = Number(number.toString().slice(-1));
+        if (number > 4 && number < 15) return "человек тусанет";
+        if ([2, 3, 4].indexOf(lastOne) >= 0) return "человека тусанут";
+        if (lastOne === 1) return "человек тусанет";
+        return "человек тусанет";
+    };
 
-    const renderPhrase = () => {
-        if(users.length>1 &&users.length<5){
-            return <h1 key="some" className="badge bg-primary">{users.length} человека тусанут с тобой сегодня</h1>;
-        } else if(!users.length){
-            return <h1 key="oneoremany" className="badge bg-danger">Никто с тобой не тусанет.Смирись</h1>;
-        }
-        return <h1 key="nobody" className="badge bg-primary">{users.length} человек тусанeт с тобой сегодня</h1>;
-    }
-
-    const addQualityClass = (color) => {
-        return `badge bg-${color} m-1`;
-    }
-
-    const changeTableClass = () => {
-        if(!users.length){return "d-none"};
-        return "table";
-    }
-
-    const createUsersList = () => {
-        return (
-            users.map(user => (
-                <tr key={user._id}>
-                    <td>{user.name}</td>
-                    <td>{user.qualities.map(quality => (
-                        <span key={quality._id} className={addQualityClass(quality.color)}>{quality.name}</span>
-                    ))}</td>
-                    <td key={user.profession._id}>{user.profession.name}</td>
-                    <td>{user.completedMeetings}</td>
-                    <td>{user.rate}</td>
-                    <td className="badge bg-danger m-2" onClick={() => handleDelete(user._id)}> DELETE</td>
-                </tr>
-        )));
-    }
-
-    const renderTable = () => {
-        return (
-            <thead>
-                <tr>
-                    <th scope="col">Имя</th>
-                    <th scope="col">Качества</th>
-                    <th scope="col">Профессия</th>
-                    <th scope="col">Встретился,раз</th>
-                    <th scope="col">Оценка</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-        )
-    }
-    
     return (
         <>
-        {renderPhrase()}
-        
-        <table className={changeTableClass()}>
-            {renderTable()}
-            <tbody>
-                {createUsersList()}
-            </tbody>
-            
-        </table>
+            <h2>
+                <span
+                    className={"badge " + (users.length > 0 ? "bg-primary" : "bg-danger")}
+                >
+                    {users.length > 0
+                        ? `${users.length + " " + renderPhrase(users.length)} с тобой сегодня`
+                        : "Никто с тобой не тусанет"}
+                </span>
+            </h2>
+
+            {users.length > 0 && (
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Имя</th>
+                            <th scope="col">Качества</th>
+                            <th scope="col">Профессия</th>
+                            <th scope="col">Встретился, раз</th>
+                            <th scope="col">Оценка</th>
+                            <th />
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr key={user._id}>
+                                <td>{user.name}</td>
+                                <td>
+                                    {user.qualities.map((item) => (
+                                        <span className={"badge m-1 bg-" + item.color} key={item._id}>
+                                            {item.name}
+                                        </span>
+                                    ))}
+                                </td>
+                                <td>{user.profession.name}</td>
+                                <td>{user.completedMeetings}</td>
+                                <td>{user.rate} /5</td>
+                                <td>
+                                    <button
+                                        onClick={() => handleDelete(user._id)}
+                                        className="btn btn-danger"
+                                    >
+                                        delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </>
-    )
-}
+    );
+};
 
 export default Users;
