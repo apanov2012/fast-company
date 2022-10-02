@@ -1,0 +1,29 @@
+[33mcommit c6f954607b457203555485e6c1d3ff2270f254b8[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: apanov2012 <apanov2012@gmail.com>
+Date:   Sat Sep 24 15:40:56 2022 +0300
+
+    add pagination,eslint and propTypes in project
+
+[33mcommit dd9e228191877c7de1fc62b38fafda26af05424e[m
+Author: apanov2012 <apanov2012@gmail.com>
+Date:   Sun Sep 18 21:54:04 2022 +0300
+
+    add a bookmark function.Homework of 3-rd block React
+
+[33mcommit 706e05b09fa1eb91f970ad2ca6297a4966668981[m
+Author: apanov2012 <apanov2012@gmail.com>
+Date:   Wed Sep 14 13:13:24 2022 +0300
+
+    code was change to the same as recommended
+
+[33mcommit e911d2a8834caf21f5fd028ef7bf82a240038496[m
+Author: apanov2012 <apanov2012@gmail.com>
+Date:   Sun Sep 11 19:21:37 2022 +0300
+
+    create react homework for block 1
+
+[33mcommit 3c6f7b08b2d818c3550e5fa5db82da34a6b12aaf[m
+Author: apanov2012 <apanov2012@gmail.com>
+Date:   Fri Sep 9 20:03:52 2022 +0300
+
+    Initialize project using Create React App

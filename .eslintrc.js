@@ -20,9 +20,10 @@ module.exports = {
     rules: {
         indent: ["error", 4], // Отступ количество пробелов 
         semi: [2, "always"], // Точка с запятой в конце строки
-
+        "no-unused-vars": [2, { "vars": "local", "args": "none" }],
         // Ошибка при наличии пробела при обозночении функции, уберём её
-        "space-before-function-paren": ["error", "never"],
+        "space-before-function-paren": ["error",
+        {anonymous:"always",named:"never"}],
 
         // Использование двойных кавычек
         quotes: ["error", "double", { allowTemplateLiterals: true }]
