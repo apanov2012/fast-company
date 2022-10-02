@@ -8,23 +8,22 @@ import api from "../api/index.js";
 import SearchStatus from "../components/searchStatus";
 
 const Users = ({ users, ...rest }) => {
+    // поставил условие для отображения юзеров, так как ,если изначально
+    // их нет, то компиляции не происходит
+    const [currentPage, setCurrentPage] = useState(1);
+    const [professions, setProfession] = useState();
+    const [selectedProf, setSelectedProf] = useState();
+    const pageSize = 4;
+    useEffect(() => {
+        api.professions.fetchAll().then((data) =>
+            setProfession(
+                data
+            ));
+    }, []);
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [selectedProf]);
     if (users) {
-        // поставил условие для отображения юзеров, так как ,если изначально
-        // их нет, то компиляции не происходит
-        const [currentPage, setCurrentPage] = useState(1);
-        const [professions, setProfession] = useState();
-        const [selectedProf, setSelectedProf] = useState();
-        const pageSize = 4;
-        useEffect(() => {
-            api.professions.fetchAll().then((data) =>
-                setProfession(
-                    data
-                ));
-        }, []);
-        useEffect(() => {
-            setCurrentPage(1);
-        }, [selectedProf]);
-
         const handlerPageChange = (pageIndex) => {
             setCurrentPage(pageIndex);
         };
