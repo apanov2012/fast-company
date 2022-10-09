@@ -9,8 +9,6 @@ import UserTable from "./usersTable";
 import _ from "lodash";
 
 const Users = () => {
-    // поставил условие для отображения юзеров, так как ,если изначально
-    // их нет, то компиляции не происходит
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();

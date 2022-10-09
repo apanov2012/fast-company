@@ -1,28 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const CaretChange = ({ selectedSort }) => {
-    console.log("CaretChangeItem", selectedSort);
-    return (
-        <i className="bi bi-caret-up-fill"></i>
-    );
+const CaretChange = ({ selectedSort, currentPath }) => {
+    if (selectedSort.path === currentPath) {
+        if (selectedSort.order === "asc") {
+            return <i className="bi bi-caret-down-fill"></i>;
+        } else {
+            return <i className="bi bi-caret-up-fill"></i>;
+        }
+    }
+    return null;
 };
 CaretChange.propTypes = {
-    selectedSort: PropTypes.object
+    selectedSort: PropTypes.object,
+    currentPath: PropTypes.string
 };
 
 export default CaretChange;
-
-// if (item) {
-//     if (selectedSort.path === item && selectedSort.order === "asc") {
-//         console.log("asc");
-//         return (
-//             <i className="bi bi-caret-up-fill"></i>
-//         );
-//     } else {
-//         console.log("desc");
-//         return (
-//             <i className="bi bi-caret-up-fill"></i>
-//         );
-//     }
-// }

@@ -1,45 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import CaretChange from "./caretChange";
 
 const tableHeader = ({ onSort, selectedSort, columns }) => {
-    // console.log("selectedSort", selectedSort);
+    const [currentPath, setCurrentPath] = useState();
     const handleSort = (item) => {
         if (selectedSort.path === item) {
             onSort({
                 ...selectedSort,
                 order: selectedSort.order === "asc"
                     ? "desc"
-                    : "asc",
-                status: selectedSort.status === "up"
-                    ? "down"
-                    : "up"
+                    : "asc"
             });
         } else {
             onSort({
                 path: item,
-                order: "asc",
-                status: "up"
+                order: "asc"
             });
         }
     };
 
-    // const checkCaret = (item) => {
-    //     console.log("item", item);
-    //     if (item) {
-    //         if (selectedSort.path === item && selectedSort.order === "asc") {
-    //             console.log("asc");
-    //             return (
-    //                 <i className="bi bi-caret-up-fill"></i>
-    //             );
-    //         } else {
-    //             console.log("desc");
-    //             return (
-    //                 <i className="bi bi-caret-up-fill"></i>
-    //             );
-    //         }
-    //     }
-    // };
+    const changeCurrentPath = (column) => {
+        setCurrentPath(column);
+    };
+    const complexOfActions = (item) => {
+        handleSort(item);
+        changeCurrentPath(item);
+    };
 
     return <thead>
         <tr>
@@ -47,20 +34,14 @@ const tableHeader = ({ onSort, selectedSort, columns }) => {
                 <th key={column}
                     onClick={
                         columns[column].path
-                            ? () => handleSort(columns[column].path)
+                            ? () => complexOfActions(columns[column].path)
                             : undefined
                     }
-                    // onClick={
-                    //     columns[column].path
-                    //     ? () => handleSort(columns[column].path)
-                    //     : undefined
-                    // }
                     {...{ role: columns[column].path && "button" }}
                     scope="col">{columns[column].name}
-                    {(columns[column].path)
-                        ? <CaretChange { ...{ selectedSort } }/>
+                    {(columns[column].path === currentPath)
+                        ? <CaretChange { ...{ selectedSort, currentPath } } />
                         : undefined }
-                    {/* <CaretChange { ...{ selectedSort } }/> */}
                 </th>
             ))}
         </tr>
