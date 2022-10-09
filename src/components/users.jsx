@@ -1,19 +1,40 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "./pagination";
-import User from "./user";
 import paginate from "../utils/paginate";
 import PropTypes from "prop-types";
 import GroupList from "./groupList";
 import api from "../api/index.js";
 import SearchStatus from "../components/searchStatus";
+import UserTable from "./usersTable";
+import _ from "lodash";
 
-const Users = ({ users, ...rest }) => {
+const Users = () => {
     // поставил условие для отображения юзеров, так как ,если изначально
     // их нет, то компиляции не происходит
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
-    const pageSize = 4;
+    const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
+    const pageSize = 6;
+
+    const [users, setUsers] = useState();
+    useEffect(() => {
+        api.users.fetchAll().then((users) => setUsers(users));
+    }, []);
+    const handleDelete = (userId) => {
+        setUsers(users.filter((user) => user._id !== userId));
+    };
+    const handleToggleBookMark = (id) => {
+        setUsers(
+            users.map((user) => {
+                if (user._id === id) {
+                    return { ...user, bookmark: !user.bookmark };
+                }
+                return user;
+            })
+        );
+    };
+
     useEffect(() => {
         api.professions.fetchAll().then((data) =>
             setProfession(
@@ -30,11 +51,15 @@ const Users = ({ users, ...rest }) => {
         const handleProfessionSelect = item => {
             setSelectedProf(item);
         };
+        const handleSort = (item) => {
+            setSortBy(item);
+        };
         const filteredUsers = selectedProf
             ? users.filter((user) => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
             : users;
         const count = filteredUsers.length;
-        const userCrop = paginate(filteredUsers, currentPage, pageSize);
+        const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
+        const userCrop = paginate(sortedUsers, currentPage, pageSize);
         const clearFilter = () => {
             setSelectedProf();
         };
@@ -53,24 +78,13 @@ const Users = ({ users, ...rest }) => {
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
                     {count > 0 && (
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Имя</th>
-                                    <th scope="col">Качества</th>
-                                    <th scope="col">Провфессия</th>
-                                    <th scope="col">Встретился, раз</th>
-                                    <th scope="col">Оценка</th>
-                                    <th scope="col">Избранное</th>
-                                    <th />
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {userCrop.map((user) => (
-                                    <User key={user._id} {...rest} {...user} />
-                                ))}
-                            </tbody>
-                        </table>
+                        <UserTable
+                            users={ userCrop }
+                            onSort={handleSort}
+                            selectedSort={sortBy}
+                            onDelete={handleDelete}
+                            onToggleBookMark={handleToggleBookMark}
+                        />
                     )}
                     <div className="d-flex justify-content-center">
                         <Pagination
@@ -84,6 +98,7 @@ const Users = ({ users, ...rest }) => {
             </div>
         );
     }
+    return "loading";
 };
 Users.propTypes = {
     users: PropTypes.array
