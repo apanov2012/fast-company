@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import GroupList from "./groupList";
 import api from "../api/index.js";
 import SearchStatus from "../components/searchStatus";
-import UserTable from "./usersTable";
+import UsersTable from "./usersTable";
 import _ from "lodash";
 
 const Users = () => {
@@ -76,7 +76,7 @@ const Users = () => {
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
                     {count > 0 && (
-                        <UserTable
+                        <UsersTable
                             users={ userCrop }
                             onSort={handleSort}
                             selectedSort={sortBy}
@@ -99,7 +99,8 @@ const Users = () => {
     return "loading";
 };
 Users.propTypes = {
-    users: PropTypes.array
+    users: PropTypes.array,
+    getUserInfo: PropTypes.func
 };
 
 export default Users;

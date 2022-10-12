@@ -1,9 +1,11 @@
 import React from "react";
-import Users from "./components/users";
+import NavMenu from "./components/navMenu/navMenu";
 
 function App() {
     return (
-        <Users/>
+        <>
+            <NavMenu/>
+        </>
     );
 }
 
