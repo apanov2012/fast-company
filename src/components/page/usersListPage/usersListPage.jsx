@@ -18,10 +18,8 @@ const usersListPage = () => {
     const pageSize = 6;
 
     const [users, setUsers] = useState();
-    const [originalUsers, setOriginalUsers] = useState();
     useEffect(() => {
         api.users.fetchAll().then((users) => setUsers(users));
-        api.users.fetchAll().then((users) => setOriginalUsers(users));
     }, []);
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
@@ -48,7 +46,6 @@ const usersListPage = () => {
         };
         const handleProfessionSelect = (item) => {
             setSearchInput("");
-            setUsers(originalUsers);
             setSelectedProf(item);
         };
         const handleSort = (item) => {
