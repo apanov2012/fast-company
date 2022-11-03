@@ -13,12 +13,28 @@ const Users = () => {
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
+    const [searchInput, setSearchInput] = useState("");
     const pageSize = 6;
 
     const [users, setUsers] = useState();
+    const [originalUsers, setOriginalUsers] = useState();
+    const [inputSearch, setInputSearch] = useState();
     useEffect(() => {
         api.users.fetchAll().then((users) => setUsers(users));
+        api.users.fetchAll().then((users) => setOriginalUsers(users));
     }, []);
+    useEffect(() => {
+        setSelectedProf();
+        setInputSearch(searchInput);
+        setUsers(originalUsers);
+        if (originalUsers) {
+            setUsers(
+                originalUsers.filter((user) =>
+                    user.name.toLowerCase().match(inputSearch)
+                )
+            );
+        }
+    }, [searchInput, inputSearch]);
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
     };
@@ -34,10 +50,7 @@ const Users = () => {
     };
 
     useEffect(() => {
-        api.professions.fetchAll().then((data) =>
-            setProfession(
-                data
-            ));
+        api.professions.fetchAll().then((data) => setProfession(data));
     }, []);
     useEffect(() => {
         setCurrentPage(1);
@@ -46,20 +59,34 @@ const Users = () => {
         const handlerPageChange = (pageIndex) => {
             setCurrentPage(pageIndex);
         };
-        const handleProfessionSelect = item => {
+        const handleProfessionSelect = (item) => {
+            document.querySelector("#searchInput").value = "";
+            setUsers(originalUsers);
             setSelectedProf(item);
         };
         const handleSort = (item) => {
             setSortBy(item);
         };
         const filteredUsers = selectedProf
-            ? users.filter((user) => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
+            ? users.filter(
+                  (user) =>
+                      JSON.stringify(user.profession) ===
+                      JSON.stringify(selectedProf)
+              )
             : users;
         const count = filteredUsers.length;
-        const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
+        const sortedUsers = _.orderBy(
+            filteredUsers,
+            [sortBy.path],
+            [sortBy.order]
+        );
         const userCrop = paginate(sortedUsers, currentPage, pageSize);
         const clearFilter = () => {
             setSelectedProf();
+        };
+
+        const handleSearchInput = ({ target }) => {
+            setSearchInput(target.value);
         };
         return (
             <div className="d-flex">
@@ -70,16 +97,29 @@ const Users = () => {
                             items={professions}
                             onItemSelect={handleProfessionSelect}
                         />
-                        <button className="btn btn-secondary mt-2" onClick={clearFilter}>CLEAR</button>
+                        <button
+                            className="btn btn-secondary mt-2"
+                            onClick={clearFilter}
+                        >
+                            CLEAR
+                        </button>
                     </div>
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        name="searchInput"
+                        onChange={handleSearchInput}
+                        id="searchInput"
+                    />
                     {count > 0 && (
                         <UsersTable
-                            users={ userCrop }
+                            users={userCrop}
                             onSort={handleSort}
                             selectedSort={sortBy}
+                            searchInput={searchInput}
                             onDelete={handleDelete}
                             onToggleBookMark={handleToggleBookMark}
                         />
