@@ -3,7 +3,7 @@ import { Route, Link, Switch } from "react-router-dom";
 import SingleUser from "../page/userPage/singleUser";
 import MainMenu from "./main";
 import LoginMenu from "./login";
-import Users from "../page/usersListPage/users";
+import Users from "../page/usersListPage/usersListPage";
 
 const NavMenu = () => {
     return (

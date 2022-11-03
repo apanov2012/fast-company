@@ -1,3 +1,4 @@
+// eslint-disable no-eval
 import React, { useState, useEffect } from "react";
 import Pagination from "../../common/pagination";
 import paginate from "../../../utils/paginate";
@@ -8,7 +9,7 @@ import SearchStatus from "../../ui/searchStatus";
 import UsersTable from "./usersTable";
 import _ from "lodash";
 
-const Users = () => {
+const usersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
@@ -22,17 +23,6 @@ const Users = () => {
         api.users.fetchAll().then((users) => setUsers(users));
         api.users.fetchAll().then((users) => setOriginalUsers(users));
     }, []);
-    useEffect(() => {
-        setSelectedProf();
-        setUsers(originalUsers);
-        if (originalUsers) {
-            setUsers(
-                originalUsers.filter((user) =>
-                    user.name.toLowerCase().match(searchInput)
-                )
-            );
-        }
-    }, [searchInput]);
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
     };
@@ -46,7 +36,6 @@ const Users = () => {
             })
         );
     };
-
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfession(data));
     }, []);
@@ -58,14 +47,18 @@ const Users = () => {
             setCurrentPage(pageIndex);
         };
         const handleProfessionSelect = (item) => {
-            document.querySelector("#searchInput").value = "";
+            setSearchInput("");
             setUsers(originalUsers);
             setSelectedProf(item);
         };
         const handleSort = (item) => {
             setSortBy(item);
         };
-        const filteredUsers = selectedProf
+        const filteredUsers = searchInput
+            ? users.filter((user) =>
+                  user.name.toLowerCase().match(searchInput.toLowerCase())
+              )
+            : selectedProf
             ? users.filter(
                   (user) =>
                       JSON.stringify(user.profession) ===
@@ -111,6 +104,7 @@ const Users = () => {
                         name="searchInput"
                         onChange={handleSearchInput}
                         id="searchInput"
+                        value={searchInput}
                     />
                     {count > 0 && (
                         <UsersTable
@@ -136,9 +130,8 @@ const Users = () => {
     }
     return "loading";
 };
-Users.propTypes = {
-    users: PropTypes.array,
-    getUserInfo: PropTypes.func
+usersListPage.propTypes = {
+    users: PropTypes.array
 };
 
-export default Users;
+export default usersListPage;
