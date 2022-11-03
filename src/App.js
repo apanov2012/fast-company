@@ -1,10 +1,10 @@
 import React from "react";
-import NavMenu from "./components/navMenu/navMenu";
+import NavMenu from "./components/layouts/navMenu";
 
 function App() {
     return (
         <>
-            <NavMenu/>
+            <NavMenu />
         </>
     );
 }

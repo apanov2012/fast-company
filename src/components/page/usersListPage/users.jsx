@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Pagination from "./pagination";
-import paginate from "../utils/paginate";
+import Pagination from "../../common/pagination";
+import paginate from "../../../utils/paginate";
 import PropTypes from "prop-types";
-import GroupList from "./groupList";
-import api from "../api/index.js";
-import SearchStatus from "../components/searchStatus";
+import GroupList from "../../common/groupList";
+import api from "../../../api/index";
+import SearchStatus from "../../ui/searchStatus";
 import UsersTable from "./usersTable";
 import _ from "lodash";
 
@@ -18,23 +18,21 @@ const Users = () => {
 
     const [users, setUsers] = useState();
     const [originalUsers, setOriginalUsers] = useState();
-    const [inputSearch, setInputSearch] = useState();
     useEffect(() => {
         api.users.fetchAll().then((users) => setUsers(users));
         api.users.fetchAll().then((users) => setOriginalUsers(users));
     }, []);
     useEffect(() => {
         setSelectedProf();
-        setInputSearch(searchInput);
         setUsers(originalUsers);
         if (originalUsers) {
             setUsers(
                 originalUsers.filter((user) =>
-                    user.name.toLowerCase().match(inputSearch)
+                    user.name.toLowerCase().match(searchInput)
                 )
             );
         }
-    }, [searchInput, inputSearch]);
+    }, [searchInput]);
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
     };

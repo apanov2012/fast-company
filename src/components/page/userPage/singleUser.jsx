@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import api from "../api/fake.api/user.api";
-import QualitiesList from "./qualitiesList";
+import api from "../../../api/fake.api/user.api";
+import QualitiesList from "../../ui/qualities/qualitiesList";
 
 const SingleUser = () => {
     const [userParams, setUserParams] = useState();
@@ -11,7 +11,9 @@ const SingleUser = () => {
     };
     const idForSearch = useParams();
     useEffect(() => {
-        api.getUserById(idForSearch.userId).then(data => changeUserParams(data));
+        api.getUserById(idForSearch.userId).then((data) =>
+            changeUserParams(data)
+        );
     }, [idForSearch]);
     const buttonStyle = {
         textDecoration: "none",
@@ -32,7 +34,13 @@ const SingleUser = () => {
                         </tr>
                         <tr>
                             <td>Качества :</td>
-                            <td>{<QualitiesList qualities={userParams.qualities}/>}</td>
+                            <td>
+                                {
+                                    <QualitiesList
+                                        qualities={userParams.qualities}
+                                    />
+                                }
+                            </td>
                         </tr>
                         <tr>
                             <td>Количество встреч :</td>
@@ -44,7 +52,11 @@ const SingleUser = () => {
                         </tr>
                     </tbody>
                 </table>
-                <button ><a href="/users" style={buttonStyle}>Все пользователи</a></button>
+                <button>
+                    <a href="/users" style={buttonStyle}>
+                        Все пользователи
+                    </a>
+                </button>
             </>
         );
     } else {

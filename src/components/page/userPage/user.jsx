@@ -1,6 +1,6 @@
 import React from "react";
 import Qualitie from "./qualitie";
-import BookMark from "./bookmark";
+import BookMark from "../common/bookmark";
 import PropTypes from "prop-types";
 const User = ({
     _id,
@@ -13,7 +13,6 @@ const User = ({
     bookmark,
     onToggleBookMark
 }) => {
-
     return (
         <tr>
             <td>{name}</td>
