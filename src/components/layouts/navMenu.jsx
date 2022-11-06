@@ -4,6 +4,7 @@ import SingleUser from "../page/userPage/singleUser";
 import MainMenu from "./main";
 import LoginMenu from "./login";
 import Users from "../page/usersListPage/usersListPage";
+import EditUserForm from "../common/form/editUserForm";
 
 const NavMenu = () => {
     return (
@@ -27,9 +28,14 @@ const NavMenu = () => {
             </ul>
             <Switch>
                 <Route exact path="/" component={MainMenu} />
-                <Route exact path="/login" component={LoginMenu} />
+                <Route exact path="/login/:type?" component={LoginMenu} />
                 <Route exact path="/users" render={() => <Users />} />
                 <Route exact path="/users/:userId" component={SingleUser} />
+                <Route
+                    exact
+                    path="/users/:userId/edit"
+                    component={EditUserForm}
+                />
             </Switch>
         </>
     );

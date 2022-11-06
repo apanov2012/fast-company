@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import api from "../../../api/fake.api/user.api";
+import api from "../../../api";
 import QualitiesList from "../../ui/qualities/qualitiesList";
 
 const SingleUser = () => {
@@ -11,10 +11,10 @@ const SingleUser = () => {
     };
     const idForSearch = useParams();
     useEffect(() => {
-        api.getUserById(idForSearch.userId).then((data) =>
-            changeUserParams(data)
-        );
-    }, [idForSearch]);
+        api.users
+            .getUserById(idForSearch.userId)
+            .then((data) => changeUserParams(data));
+    }, []);
     const buttonStyle = {
         textDecoration: "none",
         color: "black"
@@ -53,8 +53,8 @@ const SingleUser = () => {
                     </tbody>
                 </table>
                 <button>
-                    <a href="/users" style={buttonStyle}>
-                        Все пользователи
+                    <a href={`/users/${userParams._id}/edit`} style={buttonStyle}>
+                        Изменить
                     </a>
                 </button>
             </>

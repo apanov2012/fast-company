@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import GroupList from "../../common/groupList";
 import api from "../../../api/index";
 import SearchStatus from "../../ui/searchStatus";
-import UsersTable from "./usersTable";
+import UsersTable from "../../ui/usersTable";
 import _ from "lodash";
 
 const usersListPage = () => {
@@ -71,10 +71,12 @@ const usersListPage = () => {
         const userCrop = paginate(sortedUsers, currentPage, pageSize);
         const clearFilter = () => {
             setSelectedProf();
+            setSearchInput();
         };
 
         const handleSearchInput = ({ target }) => {
             setSearchInput(target.value);
+            setSelectedProf();
         };
         return (
             <div className="d-flex">
