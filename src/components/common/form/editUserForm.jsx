@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { validator } from "../../../utils/validator";
 import api from "../../../api";
 import TextField from "./textField";
 import SelectField from "./selectField";
@@ -17,6 +18,7 @@ const EditUserForm = () => {
     });
     const [qualities, setQualities] = useState([]);
     const [professions, setProfessions] = useState();
+    const [errors, setErrors] = useState({});
     const changeUserData = (data) => {
         setUserData(data);
     };
@@ -42,6 +44,7 @@ const EditUserForm = () => {
             setQualities(qualitiesList);
         });
     }, []);
+
     const handleChange = (event) => {
         setUserData((prev) => ({
             ...prev,
@@ -71,6 +74,8 @@ const EditUserForm = () => {
                 color: element.color
             });
         }
+        console.log("UserDataQualities", userData.qualities);
+        console.log("updatedQualitiesArray", updatedQualitiesArray);
         return updatedQualitiesArray;
     };
     const prepareQualitiesForSend = (array) => {
@@ -97,12 +102,45 @@ const EditUserForm = () => {
             qualities: prepareQualitiesForSend(event.value)
         }));
     };
+    const validatorConfig = {
+        name: {
+            isRequired: { message: "Имя обязательно" }
+        },
+        email: {
+            isRequired: { message: "Эл. почта обязательна" },
+            isEmail: { message: "Эл. почта введена некорректно" }
+        },
+        qualities: {
+            isRequired: {
+                message: "Выберите хотя бы одно качество"
+            }
+        }
+    };
+    const changeSubmitButton = (isValid) => {
+        if (isValid) {
+            return false;
+        } else {
+            return true;
+        }
+    };
+    useEffect(() => {
+        validate();
+    }, [userData]);
+    const validate = () => {
+        const errors = validator(userData, validatorConfig);
+        setErrors(errors);
+        console.log(errors);
+        return Object.keys(errors).length === 0;
+    };
+    const isValid = Object.keys(errors).length === 0;
     const handleSubmit = (event) => {
+        const isValid = validate();
+        if (!isValid) return;
         api.users.update(idForSearch.userId, userData);
         location.href = `/users/${idForSearch.userId}`;
         event.preventDefault();
     };
-    return userData.name ? (
+    return userData.sex ? (
         <>
             <div className="container mt-5">
                 <div className="row">
@@ -113,14 +151,14 @@ const EditUserForm = () => {
                                 name="name"
                                 value={userData.name}
                                 onChange={handleChange}
-                                // error={errors.email}
+                                error={errors.name}
                             />
                             <TextField
                                 label="Электронная почта"
                                 name="email"
                                 value={userData.email}
                                 onChange={handleChange}
-                                // error={errors.email}
+                                error={errors.email}
                             />
                             <SelectField
                                 label="Выбери свою профессию"
@@ -130,7 +168,7 @@ const EditUserForm = () => {
                                 )}
                                 dafaultOption={userData.profession.name}
                                 name="profession"
-                                // error={errors.profession}
+                                error={errors.profession}
                                 value="Pidor"
                             />
                             <RadioField
@@ -150,8 +188,10 @@ const EditUserForm = () => {
                                 defaultValue={changeQualities(userData.qualities)}
                                 name="qualities"
                                 label="выберите Ваши качества"
+                                error={errors.qualities}
                             />
                             <button
+                                disabled={changeSubmitButton(isValid)}
                                 className="btn btn-primary w-100 mx-auto"
                                 type="submit"
                             >

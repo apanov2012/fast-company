@@ -1,3 +1,5 @@
+import { isArray } from "lodash";
+
 export function validator(data, config) {
     const errors = {};
     function validate(validateMethod, data, config) {
@@ -6,6 +8,8 @@ export function validator(data, config) {
             case "isRequired":
                 if (typeof data === "boolean") {
                     statusValidate = !data;
+                } else if (isArray(data)) {
+                    statusValidate = !data.length;
                 } else {
                     statusValidate = data.trim() === "";
                 }
