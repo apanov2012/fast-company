@@ -13,7 +13,7 @@ module.exports = {
     },
     plugins: ["react"],
     rules: {
-        indent: ["warn", 4, { SwitchCase: 1 }],
+        indent: ["off", 4, { SwitchCase: 1 }],
         // indent: ["SwitchCase", 4],
         // Отступ количество пробелов
         "multiline-ternary": ["off", "always-multiline"],
@@ -26,6 +26,7 @@ module.exports = {
         ],
         "comma-dangle": "off",
         // Использование двойных кавычек
-        quotes: ["error", "double", { allowTemplateLiterals: true }]
+        quotes: ["error", "double", { allowTemplateLiterals: true }],
+        "object-shorthand": ["off", "always"]
     }
 };
