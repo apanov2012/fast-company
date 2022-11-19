@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { validator } from "../../../utils/validator";
 import api from "../../../api";
 import TextField from "../../common/form/textField";
@@ -124,8 +124,22 @@ const EditUserPage = () => {
         return Object.keys(errors).length === 0;
     };
     const isValid = Object.keys(errors).length === 0;
+    const handleBack = () => {
+        // history.push(history.location.pathname);
+        console.log("history.location", location);
+    };
     return (
         <div className="container mt-5">
+            <Link to={`/users/${userId}`}>
+                <button
+                    className="btn btn-primary"
+                    type="button"
+                    onClick={handleBack}
+                >
+                    <i className="bi bi-caret-left text-light" role="button"></i>
+                    Назад
+                </button>
+            </Link>
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
                     {!isLoading && Object.keys(professions).length > 0 ? (
