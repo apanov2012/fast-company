@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import professionService from "../services/profession.service";
+import ProfessionService from "../services/profession.service";
 import { toast } from "react-toastify";
 
 const ProfessionContext = React.createContext();
@@ -14,34 +14,36 @@ export const ProfessionProvider = ({ children }) => {
     const [professions, setProfessions] = useState([]);
     const [error, setError] = useState(null);
     useEffect(() => {
-        getProfessions();
+        if (error !== null) {
+            toast(error);
+            setError(null);
+        }
+    }, [error]);
+
+    useEffect(() => {
+        getProfessionsList();
     }, []);
-    async function getProfessions() {
+    function errorCatcher(error) {
+        const { message } = error.response.data;
+        setError(message);
+    }
+    function getProfession(id) {
+        return professions.find((p) => p._id === id);
+    }
+
+    async function getProfessionsList() {
         try {
-            const { content } = await professionService.get();
+            const { content } = await ProfessionService.get();
             setProfessions(content);
             setLoading(false);
         } catch (error) {
             errorCatcher(error);
         }
     }
-    useEffect(() => {
-        if (error) {
-            toast(error);
-            setError(null);
-        }
-    }, [error]);
-    function errorCatcher(error) {
-        console.log("error.response in useUsers", error);
-        const { message } = error.response.data;
-        setError(message);
-    }
-    function getProfessionById(id) {
-        return professions.find((profession) => profession._id === id);
-    }
+
     return (
         <ProfessionContext.Provider
-            value={{ isLoading, professions, getProfessionById }}
+            value={{ isLoading, professions, getProfession }}
         >
             {children}
         </ProfessionContext.Provider>

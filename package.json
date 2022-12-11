@@ -8,6 +8,7 @@
         "@testing-library/user-event": "^13.5.0",
         "axios": "^1.2.0",
         "bootstrap": "^5.2.1",
+        "dotenv": "^16.0.3",
         "lodash": "^4.17.15",
         "prop-types": "^15.8.1",
         "query-string": "^7.1.1",

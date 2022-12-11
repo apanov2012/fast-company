@@ -16,13 +16,17 @@ const UserProvider = ({ children }) => {
     useEffect(() => {
         getUsers();
     }, []);
+    function errorCatcher(error) {
+        const { message } = error.response.data;
+        setError(message);
+        setLoading(false);
+    }
     useEffect(() => {
-        if (error) {
+        if (error !== null) {
             toast(error);
             setError(null);
         }
     }, [error]);
-
     async function getUsers() {
         try {
             const { content } = await userService.get();
@@ -32,11 +36,7 @@ const UserProvider = ({ children }) => {
             errorCatcher(error);
         }
     }
-    function errorCatcher(error) {
-        console.log("error.response in useUsers", error);
-        const { message } = error.response.data;
-        setError(message);
-    }
+
     return (
         <UserContext.Provider value={{ users }}>
             {!isLoading ? children : "Loading..."}
@@ -50,4 +50,5 @@ UserProvider.propTypes = {
         PropTypes.node
     ])
 };
+
 export default UserProvider;
